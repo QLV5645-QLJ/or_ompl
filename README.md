@@ -31,3 +31,5 @@ catkin_make #set ompl_DIR and openRave in the cmakeList before this
 copy two built libraries to /usr/local/lib/openrave0.9-plugins/  
 python src/tests/test_planners.py # for testing
 ``` 
+
+[README by personalRobotics](README_origin.md)  
