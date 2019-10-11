@@ -16,7 +16,7 @@ cp -r src/* ../include/
 cp build/Release/lib/* ../lib/
 ```  
 
-## in the openrave_ws set up openRave and follow the README :  
+## in the openrave_ws set up openRave and follow the [README](https://github.com/QLV5645-QLJ/openrave-installation.git) :  
 ```bash
 mkdir openrave_ws
 git clone https://github.com/QLV5645-QLJ/openrave-installation.git
