@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ompl/util/Exception.h>
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <or_ompl/SemiToroidalStateSpace.h>
+#include <boost/lexical_cast.hpp>
 
 or_ompl::SemiToroidalStateSpace::SemiToroidalStateSpace(unsigned int dim):
    ompl::base::RealVectorStateSpace(dim),

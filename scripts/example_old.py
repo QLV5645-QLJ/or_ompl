@@ -10,10 +10,9 @@
 #
 # This path assumes that you installed OpenRAVE to /usr. You may need to alter
 # the command to match your acutal install destination.
-from __future__ import with_statement # for python 2.5
 
 from openravepy import *
-import time 
+
 start_config = [  0.80487864,  0.42326865, -0.54016693,  2.28895761,
                  -0.34930645, -1.19702164,  1.95971213 ]
 goal_config  = [  2.41349473, -1.43062044, -2.69016693,  2.12681216,
@@ -22,10 +21,12 @@ goal_config  = [  2.41349473, -1.43062044, -2.69016693,  2.12681216,
 # Setup the environment.
 env = Environment()
 env.SetViewer('qtcoin')
-env.Load('data/wamtest1.env.xml')
+env.Load('wamtest1.env.xml')
 robot = env.GetRobot('BarrettWAM')
 manipulator = robot.GetManipulator('arm')
 
+planner = RaveCreatePlanner(env, 'OMPL_RRTConnect')
+simplifier = RaveCreatePlanner(env, 'OMPL_Simplifier')
 
 with env:
     robot.SetActiveDOFs(manipulator.GetArmIndices())
@@ -33,31 +34,16 @@ with env:
     robot.SetActiveManipulator(manipulator)
 
 # Setup the planning instance.
-# params = Planner.PlannerParameters()
-# params.SetRobotActiveJoints(robot)
-# params.SetGoalConfig(goal_config)
+params = Planner.PlannerParameters()
+params.SetRobotActiveJoints(robot)
+params.SetGoalConfig(goal_config)
 
 # Set the timeout and planner-specific parameters. You can view a list of
 # supported parameters by calling: planner.SendCommand('GetParameters')
-# print 'Parameters:'
-# print planner.SendCommand('GetParameters')
+print 'Parameters:'
+print planner.SendCommand('GetParameters')
 
-# create planner parmaeters
-# params = Planner.PlannerParameters()
-# params.SetConfigurationSpecification(env, robot.GetActiveManipulator().GetArmConfigurationSpecification())
-# params.SetGoalConfig(goal_config)
-# print Planner.SendCommand('GetParameters')
-params = Planner.PlannerParameters()
-params.SetRobotActiveJoints(robot)
-params.SetGoalConfig(goal_config) # set goal to all ones
-# forces parabolic planning with 40 iterations
-# params.SetExtraParameters("""<_postprocessing planner="parabolicsmoother">
-#     <_nmaxiterations>40</_nmaxiterations>
-# </_postprocessing>""")
-
-
-planner = RaveCreatePlanner(env, 'OMPL_RRTstar')
-simplifier = RaveCreatePlanner(env, 'OMPL_Simplifier')
+params.SetExtraParameters('<range>0.02</range>')
 
 with env:
     with robot:
@@ -66,7 +52,6 @@ with env:
         traj = RaveCreateTrajectory(env, '')
         planner.InitPlan(robot, params)
         result = planner.PlanPath(traj)
-        # print traj
         assert result == PlannerStatus.HasSolution
 
         # Shortcut the path.
